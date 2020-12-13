@@ -1,2 +1,2 @@
-from member import member
+from member import Member
 

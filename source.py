@@ -1,12 +1,15 @@
 #obtained from desktop 
 from Mem.member import Member
 import matplotlib.pyplot as plt
+#requirement used
 from PIL import Image
 
 im = Image.open("helper.png")
 im.show()
+#when running the program, an image of the frame structure will appear. More info about the frame structure is shown in the 'README.md' section.
 print("Make sure you are consistant with units e.g. Newton,meters or Newton,mm or lb,in etc.\n\n\n")
 member_list = []
+#list
 def ini_member(i):
     """initializing 3 instances of member class for 2 legged frame"""
     param_string = input("Enter coma separated values of s,p,x,w1,w2,l in given order for member {}: \n".format(i))

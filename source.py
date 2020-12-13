@@ -25,7 +25,7 @@ for ii in range(1,4):
 m1 = member_list[0]
 m2 = member_list[1]
 m3 = member_list[2]
-dx = m3.s - m1.s #Differnce between height of Member1 and member2
+dx = m3.s - m1.s #Differnce between height of Member1 and Member2
 
 '''Calculating vertical reaction of roller support by taking summation of moments about B1 equal to zero'''
 ra = (1/m2.s) * (- m1.p * (m1.x + dx) - Member.res(m1.l, m1.w1, m1.w2) * (Member.cp(m1.l, m1.w1, m1.w2) + dx)
@@ -44,10 +44,6 @@ print("Reactions at A1: Axial Force, Tranverse Force, Mement: " + str([ra, 0, 0]
 print("Reactions at A2: Axial Force, Tranverse Force, Mement: " + str([a12, t12, m12]))
 print("Reactions at B2: Axial Force, Tranverse Force, Mement: " + str([a22, t22, m22]))
 print("Reactions at B1: Axial Force, Tranverse Force, Mement: " + str([a32, t32, m32]))
-
-'''For printing the ordinates of SFD and BMD in order to plot in MS EXcel or to varify data'''
-
-
 
 
 '''Making Diagrams'''
@@ -78,7 +74,7 @@ m3_bmd.plot(m3.sections, m3.bm_ordinates(), 'r')
 
 plt.show()
 
-#Solved Example data "Entered this data to check"
+#Solved Example data
 #10,4,3,2,2,6
 #20,6,4,3,3,7
 #10,6,1,2,2,7

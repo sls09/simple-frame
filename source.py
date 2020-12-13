@@ -1,3 +1,4 @@
+#obtained from desktop 
 from Mem.member import Member
 import matplotlib.pyplot as plt
 from PIL import Image

@@ -16,7 +16,7 @@ def ini_member(i):
     s,p,x,w1,w2,l = param_string.split(",")
     mem = Member(float(s.strip()), float(p.strip()), float(x.strip()), float(w1.strip()), float(w2.strip()), float(l.strip()))
     member_list.append(mem)
-
+#name of inputted variables (s,p,x,w1,w2,l)
 '''Initiating three instance of our member class'''
 '''In future if more members of a frame is to analyzed, then one needs to chage only the number of members and the end reactions region in this script. No need to change the member class'''
 for ii in range(1,4):

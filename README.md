@@ -8,8 +8,8 @@ Assumptions:
 - Structure has a roller at one end, and is pinned at the other end (refer to image in helper.png) 
 
 Inputs: 
-- loading condtions
-- lengths of members - P, w1, w2, l, and s; (shown in helper.png)
+- loading condtions (P, w1, w2)
+- lengths of members (s, l, x); (shown in helper.png)
 
 Outputs:
 - Reactions and moment values at the supports

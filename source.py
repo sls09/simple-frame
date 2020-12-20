@@ -1,80 +1,132 @@
-#obtained from desktop 
-from Mem.member import Member
-import matplotlib.pyplot as plt
-#requirement used
-from PIL import Image
+import 
 
-im = Image.open("helper.png")
-im.show()
-#when running the program, an image of the frame structure will appear. More info about the frame structure is shown in the 'README.md' section.
-print("Make sure you are consistant with units e.g. Newton,meters or Newton,mm or lb,in etc.\n\n\n")
-member_list = []
-#list
-def ini_member(i):
-    """initializing 3 instances of member class for 2 legged frame"""
-    param_string = input("Enter coma separated values of s,p,x,w1,w2,l in given order for member {}: \n".format(i))
-    s,p,x,w1,w2,l = param_string.split(",")
-    mem = Member(float(s.strip()), float(p.strip()), float(x.strip()), float(w1.strip()), float(w2.strip()), float(l.strip()))
-    member_list.append(mem)
-#name of inputted variables (s,p,x,w1,w2,l)
-'''Initiating three instance of our member class'''
-'''In future if more members of a frame is to analyzed, then one needs to chage only the number of members and the end reactions region in this script. No need to change the member class'''
-for ii in range(1,4):
-    ini_member(ii)
-
-m1 = member_list[0]
-m2 = member_list[1]
-m3 = member_list[2]
-dx = m3.s - m1.s #Differnce between height of Member1 and Member2
-
-'''Calculating vertical reaction of roller support by taking summation of moments about B1 equal to zero'''
-ra = (1/m2.s) * (- m1.p * (m1.x + dx) - Member.res(m1.l, m1.w1, m1.w2) * (Member.cp(m1.l, m1.w1, m1.w2) + dx)
-                 + m2.p * (m2.s - m2.x) + Member.res(m2.l, m2.w1, m2.w2) * (m2.s - Member.cp(m2.l, m2.w1, m2.w2))
-                 + m3.p * (m3.s - m3.x) + Member.res(m3.l, m3.w1, m3.w2) * (m3.s - Member.cp(m3.l, m3.w1, m3.w2))
-                 )
-ra = round(ra, 3)
-
-'''Finding End reactions for each member'''
-a12, t12, m12 = m1.end_reactions([ra, 0, 0])
-a22, t22, m22 = m2.end_reactions([t12, a12, m12])
-a32, t32, m32 = m3.end_reactions([t22, a22, m22])
-
-print("Printing End Reactions for Each Member in order (Axial, Transverse, Moment)")
-print("Reactions at A1: Axial Force, Tranverse Force, Mement: " + str([ra, 0, 0]))
-print("Reactions at A2: Axial Force, Tranverse Force, Mement: " + str([a12, t12, m12]))
-print("Reactions at B2: Axial Force, Tranverse Force, Mement: " + str([a22, t22, m22]))
-print("Reactions at B1: Axial Force, Tranverse Force, Mement: " + str([a32, t32, m32]))
+class Member:
+    """An generic object of frame member. It can be a beam, a column or a beam-column,
+    A member class represents an isolated member in equilibrium"""
 
 
-'''Making Diagrams'''
-figure = plt.figure(1, figsize=(15, 25))
+    inc = 0 #Increment at which the ordinates of SFD and BMD will be calculated
+    sections = [] #List of all the section for SFD and BMD from 0 to s
+    s = 0 #Span length
+    p = 0 #Point load
+    x = 0 #Location of point-load from member's origin
+    w1 = 0 #Load intensity, it should be zero for UVL and equal to w2 for UDL
+    w2 = 0 #Load intensity, it should be zero for UVL and equal to w1 for UDL
+    l = 0 #Length of load intensity
 
-m1_sfd = figure.add_subplot(321)
-m1_sfd.set_title('Member 1 SFD')
-m1_bmd = figure.add_subplot(322)
-m1_bmd.set_title('Member 1 BMD')
+    '''In order to keep the program simple the point load can move from [0-s]. However, the 
+    load intensity "if present" must start from origin and cannot be entirely moved.
+    Only the w2 part of the load intensity can be moved toward or away from the w1'''
 
-m2_sfd = figure.add_subplot(323)
-m2_sfd.set_title('Member 2 SFD')
-m2_bmd = figure.add_subplot(324)
-m2_bmd.set_title('Member 2 BMD')
+    A1 = 0 #Axial reaction at bottom, +ve if pointing upward
+    A2 = 0 #Axial reaction at tob, +ve if pointing downward
+    T1 = 0 #Transverse reaction at bottom, +ve if pointing right
+    T2 = 0 #Transverse reaction at top, +ve if pointing left
+    M1 = 0 #Moment at bottom, +ve if clockwise
+    M2 = 0 #Moment at top, +ve if counter clockwise
 
-m3_sfd = figure.add_subplot(325)
-m3_sfd.set_title('Member 3 SFD')
-m3_bmd = figure.add_subplot(326)
-m3_bmd.set_title('Member 3 BMD')
+    '''The sign conventions are just for the sake of consistency,
+    and has no effects on the final results''' 
 
-m1_sfd.plot(m1.sections, m1.sf_ordinates())
-m2_sfd.plot(m2.sections, m2.sf_ordinates())
-m3_sfd.plot(m3.sections, m3.sf_ordinates())
+    def __init__(self, s: float, p: float, x: float, w1: float, w2: float, l: float):
+        """Default constructor for initializing member's data i.e. s, p, x, w1, w2, l"""
+        self.s = s
+        self.p = p
+        self.x = x
+        self.w1 = w1
+        self.w2 = w2
+        self.l = l
 
-m1_bmd.plot(m1.sections, m1.bm_ordinates(), 'r')
-m2_bmd.plot(m2.sections, m2.bm_ordinates(), 'r')
-m3_bmd.plot(m3.sections, m3.bm_ordinates(), 'r')
+        if s <= 0:
+            raise Exception("Sorry, member span cannot be less than or equal to zero")
 
-plt.show()
+        self.sections = [0.0]
+        inc = 0.001 * self.s
+        while self.sections[-1] < self.s:
+            self.sections.append(round(self.sections[-1]+inc, 2))
 
-#Solved Example data
-#10,4,3,2,2,6
-#20,6,4,3,3,7
-#10,6,1,2,2,7
+    def end_reactions(self, end_actions):
+        """This methods takes a list as an argument containing the one end reactions i.e. [A1, T1, M1]
+        and calculates the other end reactions of the member in the form of list i.e. [A2, T2, M2]"""
+
+        self.A1 = A1 = end_actions[0]
+        self.T1 = T1 = end_actions[1]
+        self.M1 = M1 = end_actions[2]
+
+        self.A2 = A1
+        self.T2 = -T1 + self.p + self.res(self.l, self.w1, self.w2)
+        self.M2 = M1 + (T1 * self.s) - (self.p * (self.s - self.x)) - (self.res(self.l, self.w1, self.w2) * (self.s - self.cp(self.l, self.w1, self.w2)))
+
+        return [round(self.A2, 3), round(self.T2, 3), round(self.M2, 3)]
+
+    @staticmethod
+    def res(l, w1, w2):
+        """Returns a resultant of load intensity, takes l, w1, w2 as arguments"""
+        if w1 == 0 and w2 == 0:
+            return 0
+        else:
+            return l * (w1 + w2) / 2
+
+    @staticmethod
+    def cp(l :float, w1, w2):
+        """Returns a point of application of load intensity resultant, takes l, w1, w2 as arguments"""
+        if w1 == 0 and w2 == 0:
+            return 0
+        else:
+            return (l / 3) * (2 * w2 + w1) / (w2 + w1)
+
+    def sf_ordinates(self):
+        """This method returns the ordinates for shear force at each section of the member
+        for simplicity and speed the sections are taken at each hundredth part of the member. 
+        It can be altered by changing the inc variable in __init__"""
+
+        def wx(section):
+            """Returns the linearly interpolated ordinate (at any distance from w1) of load intensity between w1 and w2"""
+            return self.w1 + ((self.w2 - self.w1) * section / self.l)
+
+        def sf_p(section):
+            """Returns the shear force due to force p at any section "y units" away from the origin of the member"""
+            if section < self.x:
+                return 0
+            else:
+                return self.p
+
+        def sf_w(section):
+            """Returns the shear force due to force W at any section "y units" away from the origin of the member"""
+            if section < self.l:
+                return self.res(section, self.w1, wx(section))
+            else:
+                return self.res(self.l, self.w1, self.w2)
+
+        sf = []
+        for y in self.sections:
+            sf.append(round(-sf_p(y) - sf_w(y) + self.T1, 2))
+        return sf
+
+    def bm_ordinates(self):
+        """This method returns the ordinates for bending moment at each section of the member
+        for simplicity and speed the sections are taken at each hundredth part of the member.
+        It can be altered by changing the inc variable in __init__"""
+
+        def wx(section):
+            """Returns the linearly interpolated ordinate (at any distance from w1) of load intensity between w1 and w2"""
+            return self.w1 + ((self.w2 - self.w1) * section / self.l)
+
+        def bm_p(section):
+            """Returns the bending moment due to force p at any section "y units" away from the origin of the member"""
+            if section < self.x:
+                return 0
+            else:
+                return self.p * (section - self.x)
+        
+        def bm_w(section):
+            """Returns the bending moment due to force W at any section "y units" away from the origin of the member"""
+            if section < self.l:
+                return self.res(section, self.w1, wx(section)) * (section - self.cp(section, self.w1, wx(section)))
+            else:
+                return self.res(self.l, self.w1, self.w2) * (section - self.cp(self.l, self.w1, self.w2))
+
+        bm = []
+        for y in self.sections:
+            bm.append(round(-bm_p(y) - bm_w(y) + self.T1 * y + self.M1, 2))
+        return bm

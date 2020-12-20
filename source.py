@@ -1,4 +1,4 @@
-import 
+import matplotlib.pyplot as plt
 
 class Member:
     """An generic object of frame member. It can be a beam, a column or a beam-column,

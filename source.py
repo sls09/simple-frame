@@ -1,3 +1,6 @@
+#foundational code: the functions and classes
+#class type: Member --> OOP 
+#used to build larger processes 
 import matplotlib.pyplot as plt
 
 class Member:

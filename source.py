@@ -2,6 +2,7 @@
 #class type: Member --> OOP 
 #used to build larger processes 
 import matplotlib.pyplot as plt
+#required library matplotlib.pyplot
 
 class Member:
     """An generic object of frame member. It can be a beam, a column or a beam-column,

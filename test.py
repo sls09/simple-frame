@@ -1,7 +1,7 @@
 from source import Member
 
 
-print("Make sure you are consistant with units e.g. Newton,meters or Newton,mm or lb,in etc.\n\n\n")
+print("Make sure you are consistant with units (e.g.) Newton,meters or Newton,mm or lb,in etc.\n\n\n")
 member_list = []
 #list
 def ini_member(i):

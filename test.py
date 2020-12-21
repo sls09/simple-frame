@@ -1,9 +1,6 @@
 from source import Member
-from PIL import image 
-im = Image.open("helper.png")
-im.show()
 
-#when running the program, an image of the frame structure will appear. More info about the frame structure is shown in the 'README.md' section.
+
 print("Make sure you are consistant with units e.g. Newton,meters or Newton,mm or lb,in etc.\n\n\n")
 member_list = []
 #list

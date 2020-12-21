@@ -15,9 +15,6 @@ Outputs:
 - Reactions and moment values at the supports
 - Shear and Moment Diagrams for each Member (1, 2, 3). 
 
-## Setup 
-In order to use this program, curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > python get-pip.py > pip3 install matplotlib > now open Frame2D.py file > run IDLE > insert your values > obtain outputs 
-
 
 ## Setup 
 In order to use this program, open the terminal and download curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > python get-pip.py. This is to install the pip package into Python.

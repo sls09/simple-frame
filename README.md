@@ -24,4 +24,4 @@ In order to use this program, open the terminal and download curl https://bootst
 Now with the pip installed into python, install the required libriaries for this program with matplotlib (more is shown in requirements.txt)
 
 ## How to use the Program
-First, the OOP (Object Oriented Program) is initiated into the source.py with a main class called Member. 
+First, the OOP (Object Oriented Program) is initiated into the source.py with a main class called Member. The main class is the foundational code of the Frame Structure we are trying to analyze. It consists of the functions for the generic object Frame Member. The test.py then is to be used to import the class from source.py which we denoted as Member, and then instantiating a new object and printing of the object. The code will consist of equations used to calculate and print the reaction forces and moment for each Member, along with their Shear and Moment Diagrams. 

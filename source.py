@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 #required library matplotlib.pyplot
 
 class Member:
-    """An generic object of frame member. It can be a beam, a column or a beam-column,
-    A member class represents an isolated member in equilibrium"""
+    """An generic object of frame member """
 
 
     inc = 0 #Increment at which the ordinates of SFD and BMD will be calculated
@@ -14,23 +13,20 @@ class Member:
     s = 0 #Span length
     p = 0 #Point load
     x = 0 #Location of point-load from member's origin
-    w1 = 0 #Load intensity, it should be zero for UVL and equal to w2 for UDL
-    w2 = 0 #Load intensity, it should be zero for UVL and equal to w1 for UDL
+    w1 = 0 #Load intensity
+    w2 = 0 #Load intensity
     l = 0 #Length of load intensity
 
-    '''In order to keep the program simple the point load can move from [0-s]. However, the 
-    load intensity "if present" must start from origin and cannot be entirely moved.
-    Only the w2 part of the load intensity can be moved toward or away from the w1'''
+    '''In order to keep the program simple the point load can move from [0-s]. 
 
-    A1 = 0 #Axial reaction at bottom, +ve if pointing upward
+    A1 = 0 #Axial reaction at bottom, +ve if pointing upward (vertical force)
     A2 = 0 #Axial reaction at tob, +ve if pointing downward
-    T1 = 0 #Transverse reaction at bottom, +ve if pointing right
+    T1 = 0 #Transverse reaction at bottom, +ve if pointing right (horizontal force)
     T2 = 0 #Transverse reaction at top, +ve if pointing left
     M1 = 0 #Moment at bottom, +ve if clockwise
     M2 = 0 #Moment at top, +ve if counter clockwise
 
-    '''The sign conventions are just for the sake of consistency,
-    and has no effects on the final results''' 
+    '''The sign conventions are for the sake of consistency''' 
 
     def __init__(self, s: float, p: float, x: float, w1: float, w2: float, l: float):
         """Default constructor for initializing member's data i.e. s, p, x, w1, w2, l"""
